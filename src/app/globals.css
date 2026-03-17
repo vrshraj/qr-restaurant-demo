@@ -1,4 +1,5 @@
 @import "tailwindcss";
+/* Tailwind v4 - Some IDEs may show warnings for @theme, @custom-variant, etc. These are valid in v4. */
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
@@ -38,6 +39,14 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+  --font-serif: var(--font-serif);
+  --font-inter: var(--font-inter);
+  --color-rusty-orange: var(--rusty-orange);
+  --color-golden-hour: var(--golden-hour);
+  --color-swiggy-purple: var(--swiggy-purple);
+  --color-swiggy-orange: var(--swiggy-orange);
+  --color-swiggy-yellow: var(--swiggy-yellow);
+  --color-swiggy-bg: var(--swiggy-bg);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -80,6 +89,12 @@
   --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
   --sidebar-border: oklch(0.929 0.013 255.508);
   --sidebar-ring: oklch(0.704 0.04 256.788);
+  --rusty-orange: #BB5C3D;
+  --golden-hour: #E9D5A5;
+  --swiggy-purple: #602080;
+  --swiggy-orange: #FC8019;
+  --swiggy-yellow: #FFD700;
+  --swiggy-bg: #f0f0f5;
 }
 
 .dark {
