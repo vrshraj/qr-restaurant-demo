@@ -75,10 +75,16 @@ export function CartDrawer() {
   }
 
   return (
-    <Sheet open={cartOpen} onOpenChange={(open) => {
-      setCartOpen(open)
-      if (!open) setActiveTab('menu')
-    }} modal={false}>
+    <Sheet 
+      open={cartOpen} 
+      onOpenChange={(open) => {
+        if (!open) {
+          setCartOpen(false)
+          setActiveTab('menu')
+        }
+      }} 
+      modal={false}
+    >
       <SheetContent 
         side="bottom" 
         className="rounded-t-[20px] max-h-[90vh] bg-(--surface) p-0 border-0 outline-none flex flex-col"
