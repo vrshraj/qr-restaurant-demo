@@ -55,7 +55,7 @@ export function MenuClient({ tableNumber }: MenuClientProps) {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+        <div className="min-h-screen bg-linear-to-br from-slate-50 to-slate-100">
             {/* ── Header ── */}
             <header
                 className="sticky top-0 z-30 bg-white shadow-lg backdrop-blur-sm"
@@ -69,7 +69,7 @@ export function MenuClient({ tableNumber }: MenuClientProps) {
                             <p className="text-xs text-slate-500">{RESTAURANT.tagline}</p>
                         </div>
                     </div>
-                    <div className="flex items-center gap-1.5 bg-gradient-to-r from-amber-50 to-amber-100 border-2 border-amber-200 rounded-full px-3 py-1.5 shadow-sm">
+                    <div className="flex items-center gap-1.5 bg-linear-to-r from-amber-50 to-amber-100 border-2 border-amber-200 rounded-full px-3 py-1.5 shadow-sm">
                         <UtensilsCrossed className="w-4 h-4 text-amber-600 animate-pulse" />
                         <span className="text-xs font-bold text-amber-700">Table {tableNumber}</span>
                     </div>
@@ -82,7 +82,7 @@ export function MenuClient({ tableNumber }: MenuClientProps) {
                             key={cat.id}
                             onClick={() => scrollToCategory(cat.id)}
                             className={`shrink-0 px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 animate-in fade-in slide-in-from-left-4 ${activeCategory === cat.id
-                                    ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-lg scale-105'
+                                    ? 'bg-linear-to-r from-amber-500 to-amber-600 text-white shadow-lg scale-105'
                                     : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                                 }`}
                             style={{ animationDelay: `${idx * 50}ms` }}
@@ -122,7 +122,7 @@ export function MenuClient({ tableNumber }: MenuClientProps) {
                                             style={{ animationDelay: `${itemIdx * 50}ms` }}
                                         >
                                             {/* Image */}
-                                            <div className="relative w-32 shrink-0 aspect-square bg-gradient-to-br from-slate-100 to-slate-200 overflow-hidden">
+                                            <div className="relative w-32 shrink-0 aspect-square bg-linear-to-br from-slate-100 to-slate-200 overflow-hidden">
                                                 <Image
                                                     src={item.image}
                                                     alt={item.name}
@@ -152,7 +152,7 @@ export function MenuClient({ tableNumber }: MenuClientProps) {
                                                         onClick={() => handleItemTap(item)}
                                                         className={`px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200 active:scale-95 ${unavailable
                                                                 ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
-                                                                : 'bg-gradient-to-r from-amber-500 to-amber-600 text-white hover:shadow-lg hover:scale-105'
+                                                                : 'bg-linear-to-r from-amber-500 to-amber-600 text-white hover:shadow-lg hover:scale-105'
                                                             }`}
                                                     >
                                                         {item.modifierGroups.length > 0 ? 'Choose' : 'Add'}
@@ -172,12 +172,12 @@ export function MenuClient({ tableNumber }: MenuClientProps) {
             <div className="fixed bottom-8 left-0 right-0 z-40 flex justify-center">
                 <button
                     onClick={() => setCartOpen(true)}
-                    className="relative flex items-center gap-2 bg-gradient-to-r from-slate-900 to-slate-800 text-white px-6 py-3.5 rounded-full shadow-2xl hover:shadow-amber-500/50 hover:scale-105 active:scale-95 transition-all duration-200 border-2 border-amber-500/20"
+                    className="relative flex items-center gap-2 bg-linear-to-r from-slate-900 to-slate-800 text-white px-6 py-3.5 rounded-full shadow-2xl hover:shadow-amber-500/50 hover:scale-105 active:scale-95 transition-all duration-200 border-2 border-amber-500/20"
                 >
                     <ShoppingCart className="w-5 h-5 animate-bounce" />
                     <span className="font-bold text-sm">View Cart</span>
                     {totalItems > 0 && (
-                        <span className="absolute -top-3 -right-3 bg-gradient-to-r from-amber-500 to-orange-600 text-white text-xs font-bold w-7 h-7 rounded-full flex items-center justify-center shadow-lg animate-pulse">
+                        <span className="absolute -top-3 -right-3 bg-linear-to-r from-amber-500 to-orange-600 text-white text-xs font-bold w-7 h-7 rounded-full flex items-center justify-center shadow-lg animate-pulse">
                             {totalItems}
                         </span>
                     )}

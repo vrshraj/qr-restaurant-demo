@@ -113,7 +113,7 @@ export function KDSTicket({ order, onStatusUpdate }: KDSTicketProps) {
     }
 
     return (
-        <Card className={`relative overflow-hidden bg-gradient-to-br ${config.bgGradient} border-2 ${borderClass} text-white transition-all duration-300 hover:shadow-xl animate-in fade-in zoom-in-95`}>
+        <Card className={`relative overflow-hidden bg-linear-to-br ${config.bgGradient} border-2 ${borderClass} text-white transition-all duration-300 hover:shadow-xl animate-in fade-in zoom-in-95`}>
             {/* Status indicator bar */}
             <div className={`absolute inset-0 opacity-0 pointer-events-none ${config.borderColor}`} />
 
@@ -141,7 +141,7 @@ export function KDSTicket({ order, onStatusUpdate }: KDSTicketProps) {
                     agingLevel === 'warning' ? 'bg-yellow-500/20 border border-yellow-500/50' :
                     'bg-slate-700/30 border border-slate-600/30'
                 }`}>
-                    <Clock className="w-4 h-4 flex-shrink-0" />
+                    <Clock className="w-4 h-4 shrink-0" />
                     <span className="text-sm font-semibold">{elapsedTime}</span>
                     {agingLevel !== 'normal' && (
                         <AlertCircle className="w-4 h-4 ml-auto text-orange-400 animate-pulse" />
