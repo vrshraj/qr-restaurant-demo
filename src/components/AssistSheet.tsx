@@ -84,7 +84,15 @@ export function AssistSheet({ orgId = 'demo-org', locationId = 'demo-loc', table
     <Sheet open={assistOpen} onOpenChange={(open) => !open && onClose()} modal={false}>
       <SheetContent
         side="bottom"
-        className="rounded-t-[20px] max-h-[70vh] overflow-y-auto bg-(--surface) p-0 border-0 outline-none"
+        style={{
+          borderRadius: "20px 20px 0 0",
+          maxHeight: "85vh",
+          overflowY: "auto",
+          paddingBottom: "calc(80px + env(safe-area-inset-bottom))",
+          border: 'none',
+          outline: 'none',
+        }}
+        className="bg-(--surface) p-0"
       >
         <VisuallyHidden>
           <SheetTitle>Assist</SheetTitle>
@@ -92,7 +100,15 @@ export function AssistSheet({ orgId = 'demo-org', locationId = 'demo-loc', table
         </VisuallyHidden>
 
         {/* Drag Handle */}
-        <div className="w-[36px] h-[4px] bg-border rounded-[2px] mx-auto mt-3 mb-6" />
+        <div 
+          style={{
+            width: "36px",
+            height: "4px",
+            background: "#E2DED8",
+            borderRadius: "2px",
+            margin: "12px auto 16px"
+          }} 
+        />
 
         {/* Header */}
         <div className="px-5 mb-6">
@@ -105,7 +121,14 @@ export function AssistSheet({ orgId = 'demo-org', locationId = 'demo-loc', table
         </div>
 
         {/* Options List */}
-        <div className="px-5 pb-8 space-y-[10px]">
+        <div 
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "10px",
+            padding: "16px 16px 0"
+          }}
+        >
           {ASSIST_OPTIONS.map((opt) => {
             const isSent = sentOptionId === opt.id
             const isSpecial = opt.id === 'special'
@@ -129,12 +152,16 @@ export function AssistSheet({ orgId = 'demo-org', locationId = 'demo-loc', table
                     }
                   }}
                   className={cn(
-                    "flex items-center gap-4 p-4 rounded-[12px] border-[1.5px] transition-all duration-150 cursor-pointer select-none active:scale-[0.99]",
+                    "flex items-center gap-4 rounded-[12px] border-[1.5px] transition-all duration-150 cursor-pointer select-none active:scale-[0.99]",
                     isSent 
                       ? "border-[#34D399] bg-[#ECFDF5] animate-[sentPop_300ms_cubic-bezier(0.34,1.56,0.64,1)] pointer-events-none"
                       : "border-border bg-(--surface-2) hover:border-[#E8853A] hover:bg-[#FFF7F0]"
                   )}
-                  style={{ WebkitTapHighlightColor: 'transparent' }}
+                  style={{ 
+                    WebkitTapHighlightColor: 'transparent',
+                    height: 'auto',
+                    padding: '16px 20px'
+                  }}
                 >
                   {/* Emoji / Icon */}
                   <div 

@@ -44,11 +44,11 @@ interface MenuClientProps {
 
 // ── Theme Toggle Component ──────────────────────────────────────────────────
 function ThemeToggle() {
-  const [theme, setTheme] = useState<'dark' | 'light'>('dark')
+  const [theme, setTheme] = useState<'dark' | 'light'>('light')
 
   useEffect(() => {
     const saved = localStorage.getItem('theme') as 'dark' | 'light' | null
-    const initial = saved || 'dark'
+    const initial = saved || 'light'
     setTheme(initial)
     document.documentElement.setAttribute('data-theme', initial)
   }, [])
@@ -102,7 +102,7 @@ function AddButton({
   const addItem = useCartStore((s) => s.addItem)
   const removeItem = useCartStore((s) => s.removeItem)
   const cartStore = useCartStore()
-  
+
   const inCart = cartItems.find(i => i.id === item.id)
   const qty = inCart?.quantity || 0
   const [isPopping, setIsPopping] = useState(false)
@@ -174,7 +174,7 @@ function AddButton({
       }}
     >
       <button
-        onClick={(e) => { 
+        onClick={(e) => {
           e.stopPropagation()
           if (inCart) {
             useCartStore.getState().updateQuantity(inCart.id, inCart.modifiers, inCart.quantity - 1)
@@ -210,10 +210,10 @@ function AddButton({
 
 // ── Main Component ────────────────────────────────────────────────────────────
 export function MenuClient({ tableNumber }: MenuClientProps) {
-  const { 
-    cartItems, 
-    addItem, 
-    activeTab, 
+  const {
+    cartItems,
+    addItem,
+    activeTab,
     setActiveTab,
     cartCount,
     cartTotal,
@@ -241,13 +241,13 @@ export function MenuClient({ tableNumber }: MenuClientProps) {
   const [activeChips, setActiveChips] = useState<string[]>([])
   const [activeSort, setActiveSort] = useState("default")
   const [isRecording, setIsRecording] = useState(false)
-  
+
   const [scrollY, setScrollY] = useState(0)
   const [lastScrollY, setLastScrollY] = useState(0)
-  const [scrollDir, setScrollDir] = useState<"up"|"down">("down")
+  const [scrollDir, setScrollDir] = useState<"up" | "down">("down")
   const [stickyVisible, setStickyVisible] = useState(false)
   const [searchInSticky, setSearchInSticky] = useState(false)
-  
+
   const [navVisible, setNavVisible] = useState(true)
   const [lastScrollForNav, setLastScrollForNav] = useState(0)
 
@@ -258,7 +258,7 @@ export function MenuClient({ tableNumber }: MenuClientProps) {
     const onScroll = () => {
       const current = window.scrollY
       const dir = current > lastScrollY ? "down" : "up"
-      
+
       setScrollDir(dir)
       setScrollY(current)
       setLastScrollY(current)
@@ -286,7 +286,7 @@ export function MenuClient({ tableNumber }: MenuClientProps) {
     window.addEventListener("scroll", onScroll, { passive: true })
     return () => window.removeEventListener("scroll", onScroll)
   }, [lastScrollY, lastScrollForNav])
-  
+
   const recognitionRef = useRef<any>(null)
 
   useEffect(() => {
@@ -392,7 +392,7 @@ export function MenuClient({ tableNumber }: MenuClientProps) {
           item.categoryId === 'desserts'
       })
     }
-    
+
     if (activeChips.includes("rating")) {
       // Mock: Items over ₹300 are rated 4.0+
       result = result.filter(i => i.price > 300)
@@ -416,11 +416,11 @@ export function MenuClient({ tableNumber }: MenuClientProps) {
     }
 
     if (activeSort === "price_asc") {
-      result.sort((a,b) => a.price - b.price)
+      result.sort((a, b) => a.price - b.price)
     } else if (activeSort === "price_desc") {
-      result.sort((a,b) => b.price - a.price)
+      result.sort((a, b) => b.price - a.price)
     } else if (activeSort === "name") {
-      result.sort((a,b) => a.name.localeCompare(b.name))
+      result.sort((a, b) => a.name.localeCompare(b.name))
     }
 
     return result
@@ -429,9 +429,9 @@ export function MenuClient({ tableNumber }: MenuClientProps) {
   const categories = [{ id: 'all', name: 'All' }, ...MENU_CATEGORIES]
 
   return (
-    <div 
-      className="crave-noise min-h-screen relative" 
-      style={{ 
+    <div
+      className="crave-noise min-h-screen relative"
+      style={{
         background: 'var(--bg)',
         paddingBottom: "calc(64px + env(safe-area-inset-bottom))"
       }}
@@ -472,37 +472,37 @@ export function MenuClient({ tableNumber }: MenuClientProps) {
       `}</style>
 
       {/* ── New Header Structure ── */}
-      <header className="relative z-20 transition-all duration-300" style={{ 
-        background: 'var(--surface)', 
+      <header className="relative z-20 transition-all duration-300" style={{
+        background: 'var(--surface)',
         borderBottom: '1px solid var(--border)',
         padding: '14px 16px'
       }}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-             <div className="w-8 h-8 rounded-full overflow-hidden border" style={{ borderColor: 'var(--border)' }}>
-                {/* Fallback to initials if no logo */}
-                <div className="w-full h-full flex items-center justify-center bg-(--accent) text-white text-xs font-bold">
-                  GS
-                </div>
-             </div>
-             <div className="flex flex-col">
-                <h1 style={{ 
-                  fontFamily: 'var(--font-syne)', 
-                  fontSize: 18, 
-                  fontWeight: 700, 
-                  color: 'var(--text-primary)',
-                  lineHeight: 1.2
-                }}>
-                  The Grand Spice
-                </h1>
-                <p style={{ 
-                  fontFamily: 'var(--font-outfit)', 
-                  fontSize: 11, 
-                  color: 'var(--text-muted)' 
-                }}>
-                  Table {tableNumber} · Dine-in
-                </p>
-             </div>
+            <div className="w-8 h-8 rounded-full overflow-hidden border" style={{ borderColor: 'var(--border)' }}>
+              {/* Fallback to initials if no logo */}
+              <div className="w-full h-full flex items-center justify-center bg-(--accent) text-white text-xs font-bold">
+                GS
+              </div>
+            </div>
+            <div className="flex flex-col">
+              <h1 style={{
+                fontFamily: 'var(--font-syne)',
+                fontSize: 18,
+                fontWeight: 700,
+                color: 'var(--text-primary)',
+                lineHeight: 1.2
+              }}>
+                The Grand Spice
+              </h1>
+              <p style={{
+                fontFamily: 'var(--font-outfit)',
+                fontSize: 11,
+                color: 'var(--text-muted)'
+              }}>
+                Table {tableNumber} · Dine-in
+              </p>
+            </div>
           </div>
           <ThemeToggle />
         </div>
@@ -529,7 +529,7 @@ export function MenuClient({ tableNumber }: MenuClientProps) {
             style={{ color: 'var(--text-muted)' }}
           />
         </div>
-        
+
         {/* Prominent Mic Button */}
         <button
           onClick={startVoiceSearch}
@@ -550,8 +550,8 @@ export function MenuClient({ tableNumber }: MenuClientProps) {
       <OfferBanner />
 
       {/* ── Category Section (Normal Data Flow) ── */}
-      <div 
-        id="category-section" 
+      <div
+        id="category-section"
         className="transition-all duration-300"
         style={{
           opacity: stickyVisible ? 0 : 1,
@@ -559,35 +559,35 @@ export function MenuClient({ tableNumber }: MenuClientProps) {
         }}
       >
         <p style={{
-          fontFamily: 'var(--font-outfit)', 
-          fontSize: '12px', 
-          color: 'var(--text-muted)', 
+          fontFamily: 'var(--font-outfit)',
+          fontSize: '12px',
+          color: 'var(--text-muted)',
           letterSpacing: '0.08em',
           padding: "16px 16px 8px",
         }}>
           What's on your mind?
         </p>
 
-        <CategoryBubbles 
-          activeCategory={activeCategory} 
-          onSelectCategory={setActiveCategory} 
+        <CategoryBubbles
+          activeCategory={activeCategory}
+          onSelectCategory={setActiveCategory}
           size="full"
         />
 
         <div className="mt-2 pb-2">
-          <FilterChips 
-            onFilterChange={setActiveChips} 
-            onSortChange={setActiveSort} 
+          <FilterChips
+            onFilterChange={setActiveChips}
+            onSortChange={setActiveSort}
           />
         </div>
       </div>
 
       {/* ── Dish Count Divider ── */}
       <div className="px-4 mb-6 flex items-center gap-2.5">
-        <span style={{ 
-          fontFamily: 'var(--font-dm-mono)', 
-          fontSize: 10, 
-          letterSpacing: '0.15em', 
+        <span style={{
+          fontFamily: 'var(--font-dm-mono)',
+          fontSize: 10,
+          letterSpacing: '0.15em',
           color: 'var(--text-muted)',
           textTransform: 'uppercase',
           whiteSpace: 'nowrap'
@@ -622,7 +622,7 @@ export function MenuClient({ tableNumber }: MenuClientProps) {
                   {item.name}
                 </h3>
               </div>
-              
+
               <p style={{
                 fontFamily: 'var(--font-outfit)',
                 fontSize: 12,
@@ -636,8 +636,8 @@ export function MenuClient({ tableNumber }: MenuClientProps) {
               }}>
                 {item.description}
               </p>
-              
-              <Price 
+
+              <Price
                 amount={item.price}
                 className="mt-2"
                 amountClassName="text-[17px]"
@@ -646,32 +646,32 @@ export function MenuClient({ tableNumber }: MenuClientProps) {
 
             {/* Right Side: Image with overlaid ADD */}
             <div className="relative shrink-0 w-[88px] h-[88px] rounded-lg">
-                <Image
-                  src={item.image}
-                  alt={item.name}
-                  fill
-                  className="object-cover rounded-lg"
-                  unoptimized
-                  onError={(e) => {
-                    const target = e.currentTarget;
-                    target.style.display = 'none';
-                    const parent = target.parentElement;
-                    if (parent) {
-                      parent.classList.add('img-placeholder');
-                      parent.setAttribute('data-name', item.name.charAt(0).toUpperCase());
-                    }
-                  }}
+              <Image
+                src={item.image}
+                alt={item.name}
+                fill
+                className="object-cover rounded-lg"
+                unoptimized
+                onError={(e) => {
+                  const target = e.currentTarget;
+                  target.style.display = 'none';
+                  const parent = target.parentElement;
+                  if (parent) {
+                    parent.classList.add('img-placeholder');
+                    parent.setAttribute('data-name', item.name.charAt(0).toUpperCase());
+                  }
+                }}
+              />
+
+              {/* Absolute Overlaid ADD Button at bottom-right of image */}
+              <div className="absolute bottom-[-6px] right-[-6px] z-10 text-white">
+                <AddButton
+                  item={item}
+                  onAdd={handleItemAdd}
+                  onCustomize={handleCustomize}
+                  onAnimate={spawnParticle}
                 />
-                
-                {/* Absolute Overlaid ADD Button at bottom-right of image */}
-                <div className="absolute bottom-[-6px] right-[-6px] z-10 text-white">
-                  <AddButton 
-                    item={item} 
-                    onAdd={handleItemAdd} 
-                    onCustomize={handleCustomize} 
-                    onAnimate={spawnParticle}
-                  />
-                </div>
+              </div>
             </div>
           </div>
         ))}
@@ -698,19 +698,19 @@ export function MenuClient({ tableNumber }: MenuClientProps) {
 
       <CartDrawer />
       <MyOrderSheet tableNumber={tableNumber} />
-      
+
       <CartBar navVisible={navVisible} />
       <BottomNav visible={navVisible} />
 
-      <AssistSheet 
+      <AssistSheet
         orgId="demo-org"
         tableId={tableNumber}
       />
 
-      <ModifierModal 
-        item={modalItem} 
-        open={!!modalItem} 
-        onClose={() => setModalItem(null)} 
+      <ModifierModal
+        item={modalItem}
+        open={!!modalItem}
+        onClose={() => setModalItem(null)}
       />
 
       {/* Floating Particles */}
@@ -733,7 +733,7 @@ export function MenuClient({ tableNumber }: MenuClientProps) {
       ))}
 
       {/* ── FIXED PREMIUM STICKY OVERLAY ── */}
-      <div 
+      <div
         className="transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] shadow-sm"
         style={{
           position: "fixed",
@@ -750,7 +750,7 @@ export function MenuClient({ tableNumber }: MenuClientProps) {
         }}
       >
         {/* COMPACT SEARCH BAR */}
-        <div 
+        <div
           className="transition-all duration-300 ease-out flex items-center gap-3"
           style={{
             maxHeight: searchInSticky ? 52 : 0,
@@ -775,16 +775,16 @@ export function MenuClient({ tableNumber }: MenuClientProps) {
 
         {/* Compact Categories & Filters */}
         <div style={{ paddingTop: 8, paddingBottom: 8 }}>
-          <CategoryBubbles 
-            activeCategory={activeCategory} 
-            onSelectCategory={setActiveCategory} 
+          <CategoryBubbles
+            activeCategory={activeCategory}
+            onSelectCategory={setActiveCategory}
             size="compact"
           />
           <div className="mt-[-4px]">
-            <FilterChips 
-              compact 
-              onFilterChange={setActiveChips} 
-              onSortChange={setActiveSort} 
+            <FilterChips
+              compact
+              onFilterChange={setActiveChips}
+              onSortChange={setActiveSort}
             />
           </div>
         </div>

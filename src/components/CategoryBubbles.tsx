@@ -20,8 +20,8 @@ interface CategoryBubblesProps {
 
 export function CategoryBubbles({ activeCategory, onSelectCategory, size = 'full' }: CategoryBubblesProps) {
   const sizes = {
-    full:    { circle: 64, font: 11, gap: 20 },
-    compact: { circle: 44, font: 9,  gap: 14 },
+    full:    { circle: 84, font: 13, gap: 28 },
+    compact: { circle: 56, font: 11, gap: 18 },
   }
   const s = sizes[size]
   return (

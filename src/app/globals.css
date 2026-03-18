@@ -5,19 +5,7 @@
 
 @custom-variant dark (&:is(.dark *));
 
-:root[data-theme="dark"] {
-  --bg: #0F0E0D;
-  --surface: #161513;
-  --surface-2: #1C1A18;
-  --border: #242220;
-  --text-primary: #F0EDE8;
-  --text-secondary: #9A9188;
-  --text-muted: #4A4540;
-  --accent: #E8853A;
-  --accent-hover: #D4720A;
-}
-
-:root[data-theme="light"] {
+:root {
   --bg: #FAF8F5;
   --surface: #FFFFFF;
   --surface-2: #F5F2EE;
@@ -25,6 +13,18 @@
   --text-primary: #1A1714;
   --text-secondary: #6B6460;
   --text-muted: #B0A89E;
+  --accent: #E8853A;
+  --accent-hover: #D4720A;
+}
+
+[data-theme="dark"] {
+  --bg: #0F0E0D;
+  --surface: #161513;
+  --surface-2: #1C1A18;
+  --border: #242220;
+  --text-primary: #F0EDE8;
+  --text-secondary: #9A9188;
+  --text-muted: #4A4540;
   --accent: #E8853A;
   --accent-hover: #D4720A;
 }

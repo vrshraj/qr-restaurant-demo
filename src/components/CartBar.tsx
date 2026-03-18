@@ -10,6 +10,7 @@ export function CartBar({ navVisible = true }: { navVisible?: boolean }) {
   const total = useCartStore((s) => s.cartTotal())
   const setCartOpen = useCartStore((s) => s.setCartOpen)
   const clearCart = useCartStore((s) => s.clearCart)
+  const cartOpen = useCartStore((s) => s.cartOpen)
 
   const [isRendered, setIsRendered] = useState(count > 0)
   const [isExiting, setIsExiting] = useState(false)
@@ -60,7 +61,7 @@ export function CartBar({ navVisible = true }: { navVisible?: boolean }) {
     }
   }
 
-  if (!isRendered) return null
+  if (!isRendered || cartOpen) return null
 
   return (
     <>
@@ -104,13 +105,13 @@ export function CartBar({ navVisible = true }: { navVisible?: boolean }) {
           zIndex: 99,
           borderRadius: '14px',
           overflow: 'visible', // Visible to allow tooltip
-          background: '#1A1714',
+          background: 'var(--surface)',
           height: '64px',
           display: 'flex',
           alignItems: 'center',
           padding: '0 6px 0 16px',
           gap: '12px',
-          boxShadow: '0 -4px 20px rgba(0,0,0,0.15)'
+          boxShadow: '0 -4px 20px rgba(0,0,0,0.08)'
         }}
       >
         {/* LEFT Section */}
@@ -139,7 +140,7 @@ export function CartBar({ navVisible = true }: { navVisible?: boolean }) {
               fontFamily: 'var(--font-outfit, sans-serif)', 
               fontSize: '14px', 
               fontWeight: 600, 
-              color: '#F5F0E8',
+              color: 'var(--text-primary)',
               lineHeight: 1.2 
             }}>
               {count} item{count !== 1 ? 's' : ''} | <span style={{ fontSize: '12px', fontWeight: 400 }}>₹</span>{total}
@@ -148,7 +149,7 @@ export function CartBar({ navVisible = true }: { navVisible?: boolean }) {
               <div style={{ 
                 fontFamily: 'var(--font-outfit, sans-serif)', 
                 fontSize: '11px', 
-                color: 'rgba(255,255,255,0.45)',
+                color: 'var(--text-secondary)',
                 lineHeight: 1.2 
               }}>
                 {RESTAURANT.name}
@@ -187,8 +188,8 @@ export function CartBar({ navVisible = true }: { navVisible?: boolean }) {
             style={{
               width: '40px',
               height: '40px',
-              background: clearConfirm ? 'rgba(239,68,68,0.2)' : 'rgba(255,255,255,0.08)',
-              border: `1px solid ${clearConfirm ? 'rgba(239,68,68,0.4)' : 'rgba(255,255,255,0.1)'}`,
+              background: clearConfirm ? 'rgba(239,68,68,0.1)' : 'var(--surface-2)',
+              border: `1px solid ${clearConfirm ? 'rgba(239,68,68,0.3)' : 'var(--border)'}`,
               borderRadius: '8px',
               display: 'flex',
               alignItems: 'center',
@@ -196,7 +197,7 @@ export function CartBar({ navVisible = true }: { navVisible?: boolean }) {
               cursor: 'pointer'
             }}
           >
-            <Trash2 size={16} color={clearConfirm ? '#ef4444' : 'rgba(255,255,255,0.5)'} />
+            <Trash2 size={16} color={clearConfirm ? '#ef4444' : 'var(--text-muted)'} />
           </button>
           
           {/* Tooltip */}
@@ -207,11 +208,11 @@ export function CartBar({ navVisible = true }: { navVisible?: boolean }) {
                 position: 'absolute',
                 bottom: '48px',
                 right: '0',
-                background: '#1A1714',
-                border: '1px solid #2A2A2A',
+                background: 'var(--surface)',
+                border: '1px solid var(--border)',
                 fontFamily: 'var(--font-outfit, sans-serif)',
                 fontSize: '11px',
-                color: '#F5F0E8',
+                color: 'var(--text-primary)',
                 padding: '4px 10px',
                 borderRadius: '6px',
                 whiteSpace: 'nowrap',

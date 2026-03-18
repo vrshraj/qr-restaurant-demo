@@ -38,7 +38,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${syne.variable} ${outfit.variable} ${dmMono.variable} ${plusJakarta.variable}`}>
+    <html lang="en" data-theme="light" suppressHydrationWarning className={`${syne.variable} ${outfit.variable} ${dmMono.variable} ${plusJakarta.variable}`}>
       <body className="antialiased font-outfit bg-crave-bg text-crave-cream" suppressHydrationWarning>
         <OrderProvider>{children}</OrderProvider>
       </body>
