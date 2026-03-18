@@ -1,21 +1,34 @@
 import type { Metadata } from 'next'
-import { Instrument_Serif, Inter } from 'next/font/google'
+import { Syne, Outfit, DM_Mono, Plus_Jakarta_Sans } from 'next/font/google'
 import './globals.css'
 import { OrderProvider } from '@/context/OrderContext'
 
-const instrumentSerif = Instrument_Serif({
+const syne = Syne({
   subsets: ['latin'],
-  weight: '400',
-  variable: '--font-serif',
+  weight: ['400', '500', '600', '700', '800'],
+  variable: '--font-syne',
 })
 
-const inter = Inter({
+const outfit = Outfit({
   subsets: ['latin'],
-  variable: '--font-inter',
+  weight: ['300', '400', '500', '600', '700'],
+  variable: '--font-outfit',
+})
+
+const dmMono = DM_Mono({
+  subsets: ['latin'],
+  weight: ['400', '500'],
+  variable: '--font-dm-mono',
+})
+
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  variable: '--font-plus-jakarta',
 })
 
 export const metadata: Metadata = {
-  title: 'Spice Garden — QR Ordering',
+  title: 'CRAVE — Table Ordering',
   description: 'Scan. Order. Enjoy.',
 }
 
@@ -25,8 +38,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${instrumentSerif.variable} ${inter.variable}`}>
-      <body className="antialiased font-inter" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className={`${syne.variable} ${outfit.variable} ${dmMono.variable} ${plusJakarta.variable}`}>
+      <body className="antialiased font-outfit bg-crave-bg text-crave-cream" suppressHydrationWarning>
         <OrderProvider>{children}</OrderProvider>
       </body>
     </html>

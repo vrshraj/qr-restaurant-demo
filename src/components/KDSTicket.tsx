@@ -1,56 +1,28 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { ChefHat, Clock, AlertCircle } from 'lucide-react'
+import { Clock } from 'lucide-react'
 import type { Order, OrderStatus } from '@/context/OrderContext'
 
 type AgingLevel = 'normal' | 'warning' | 'critical'
 
-const STATUS_CONFIG: Record<OrderStatus, { 
-    next: OrderStatus | null
-    label: string
-    color: string
-    accent: string
-    indicator: string
-}> = {
-    PENDING: { 
-        next: 'ACCEPTED', 
-        label: 'Accept', 
-        color: 'bg-slate-900 text-white hover:bg-black',
-        accent: 'text-slate-500',
-        indicator: 'bg-slate-200'
-    },
-    ACCEPTED: { 
-        next: 'PREPARING', 
-        label: 'Start', 
-        color: 'bg-blue-600 text-white hover:bg-blue-700',
-        accent: 'text-blue-600',
-        indicator: 'bg-blue-100'
-    },
-    PREPARING: { 
-        next: 'READY', 
-        label: 'Finish', 
-        color: 'bg-rusty-orange text-white hover:opacity-90',
-        accent: 'text-rusty-orange',
-        indicator: 'bg-orange-50'
-    },
-    READY: { 
-        next: 'SERVED', 
-        label: 'Serve', 
-        color: 'bg-green-600 text-white hover:bg-green-700',
-        accent: 'text-green-600',
-        indicator: 'bg-green-50'
-    },
-    SERVED: { 
-        next: null, 
-        label: 'Done', 
-        color: 'bg-slate-100 text-slate-400 cursor-default',
-        accent: 'text-slate-300',
-        indicator: 'bg-slate-50'
-    }
+const DM  = 'var(--font-dm-mono), "DM Mono", monospace'
+const PJS = 'var(--font-plus-jakarta), "Plus Jakarta Sans", sans-serif'
+
+const STATUS_TEXT_COLOR: Record<OrderStatus, string> = {
+    PENDING:   '#2563EB', // blue
+    ACCEPTED:  '#D97706', // amber
+    PREPARING: '#EA6C00', // orange
+    READY:     '#059669', // emerald
+    SERVED:    '#A09890', // muted
+}
+
+const STATUS_BORDER_COLOR: Record<OrderStatus, string> = {
+    PENDING:   '#2563EB',
+    ACCEPTED:  '#D97706',
+    PREPARING: '#EA6C00',
+    READY:     '#059669',
+    SERVED:    '#D4CFC8',
 }
 
 interface KDSTicketProps {
@@ -59,133 +31,278 @@ interface KDSTicketProps {
 }
 
 export function KDSTicket({ order, onStatusUpdate }: KDSTicketProps) {
-    const [agingLevel, setAgingLevel] = useState<AgingLevel>('normal')
+    const [elapsedSeconds, setElapsedSeconds] = useState(0)
     const [elapsedTime, setElapsedTime] = useState('0:00')
     const [isUpdating, setIsUpdating] = useState(false)
 
     useEffect(() => {
         const updateAging = () => {
             const ageMs = Date.now() - new Date(order.createdAt).getTime()
-            const ageMinutes = ageMs / 60000
-
-            const mins = Math.floor(ageMinutes)
-            const secs = Math.floor((ageMs % 60000) / 1000)
+            const totalSecs = Math.floor(ageMs / 1000)
+            const mins = Math.floor(totalSecs / 60)
+            const secs = totalSecs % 60
+            setElapsedSeconds(totalSecs)
             setElapsedTime(`${mins}:${secs.toString().padStart(2, '0')}`)
-
-            if (ageMinutes >= 4) setAgingLevel('critical')
-            else if (ageMinutes >= 2) setAgingLevel('warning')
-            else setAgingLevel('normal')
         }
-
         updateAging()
         const interval = setInterval(updateAging, 1000)
         return () => clearInterval(interval)
     }, [order.createdAt])
 
-    const config = STATUS_CONFIG[order.status]
-
-    const cardStateClass = {
-        normal: 'border-slate-200 shadow-sm',
-        warning: 'border-amber-200 shadow-[0_8px_30px_rgb(251,191,36,0.1)] bg-amber-50/30',
-        critical: 'border-rusty-orange/30 shadow-[0_8px_30px_rgb(187,92,61,0.15)] bg-orange-50/50 animate-pulse'
-    }[agingLevel]
+    const nextStatus = {
+        PENDING:   'ACCEPTED',
+        ACCEPTED:  'PREPARING',
+        PREPARING: 'READY',
+        READY:     'SERVED',
+        SERVED:    null,
+    }[order.status] as OrderStatus | null
 
     const handleStatusUpdate = async () => {
-        if (!config.next) return
+        if (!nextStatus) return
         setIsUpdating(true)
-        await new Promise(r => setTimeout(r, 400))
-        onStatusUpdate(order.id, config.next)
+        await new Promise(r => setTimeout(r, 350))
+        onStatusUpdate(order.id, nextStatus)
         setIsUpdating(false)
     }
 
+    // Timer appearance by status and aging
+    const timerStyle = (() => {
+        if (order.status !== 'READY') return { 
+            color: '#6B6460', 
+            border: '1px solid #E2DED8', 
+            background: '#F4F3F0' 
+        }
+
+        const ageMins = elapsedSeconds / 60
+        if (ageMins >= 10) return { 
+            color: '#FFFFFF', 
+            border: '1px solid #DC2626', 
+            background: '#DC2626',
+            className: 'animate-timer-critical'
+        }
+        if (ageMins >= 5) return { 
+            color: '#FFFFFF', 
+            border: '1px solid #EA6C00', 
+            background: '#EA6C00' 
+        }
+        return { 
+            color: '#FFFFFF', 
+            border: '1px solid #059669', 
+            background: '#059669' 
+        }
+    })()
+
+    const cardStyle = {
+        background: '#FFFFFF',
+        border: '1px solid #E2DED8',
+        borderLeft: `4px solid ${STATUS_BORDER_COLOR[order.status]}`,
+        borderRadius: 10,
+        padding: 20,
+        display: 'flex',
+        flexDirection: 'column',
+        boxShadow: '0 1px 3px rgba(0,0,0,0.05), 0 4px 12px rgba(0,0,0,0.04)',
+    }
+
     return (
-        <Card className={`group relative bg-white border ${cardStateClass} rounded-2xl transition-all duration-500 overflow-hidden`}>
-            {/* Header Area */}
-            <div className="p-4 md:p-6 pb-2 md:pb-4 space-y-3 md:space-y-4">
-                <div className="flex justify-between items-start">
-                    <div className="space-y-1">
-                        <div className="flex items-center gap-2">
-                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Table</span>
-                            <div className="h-px w-4 bg-slate-100" />
-                        </div>
-                        <h3 className="text-5xl md:text-6xl font-serif text-slate-900 leading-none tracking-tighter">
-                            {order.tableNumber.toString().padStart(2, '0')}
-                        </h3>
-                    </div>
-                    
-                    <div className="flex flex-col items-end gap-2 md:gap-3">
-                        <Badge variant="outline" className={`px-2 py-0.5 rounded-full text-[9px] md:text-[10px] font-black uppercase tracking-widest border-slate-200 bg-slate-50 ${config.accent}`}>
-                            {order.status}
-                        </Badge>
-                        <div className={`flex items-center gap-1.5 px-2 py-1 rounded-md bg-slate-50 border border-slate-100 ${
-                            agingLevel === 'critical' ? 'text-rusty-orange font-bold' : 'text-slate-500'
-                        }`}>
-                            <Clock className="w-3 h-3" />
-                            <span className="text-[10px] md:text-xs font-mono tracking-tight">{elapsedTime}</span>
-                        </div>
-                    </div>
+        <div style={cardStyle as React.CSSProperties}>
+            {/* ── Top row ── */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <div>
+                    <p style={{ fontFamily: DM, fontSize: 9, color: '#A09890', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 4 }}>
+                        Table
+                    </p>
+                    <p style={{ fontFamily: DM, fontSize: 52, fontWeight: 400, color: '#1A1714', lineHeight: 1, marginTop: 4, marginBottom: 16 }}>
+                        {order.tableNumber.toString().padStart(2, '0')}
+                    </p>
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6 }}>
+                    <span style={{
+                        fontFamily: DM,
+                        fontSize: 10,
+                        letterSpacing: '0.12em',
+                        textTransform: 'uppercase',
+                        color: STATUS_TEXT_COLOR[order.status],
+                        fontWeight: 600,
+                    }}>
+                        {order.status}
+                    </span>
+
+                    <span 
+                        className={timerStyle.className || ''}
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 4,
+                            fontFamily: DM,
+                            fontSize: 10,
+                            letterSpacing: '0.1em',
+                            borderRadius: 6,
+                            padding: '4px 8px',
+                            transition: 'all 0.3s',
+                            color: timerStyle.color,
+                            border: timerStyle.border,
+                            background: timerStyle.background,
+                        }}
+                    >
+                        {order.status === 'READY' && elapsedSeconds >= 600 && <span style={{ marginRight: 2 }}>!</span>}
+                        {order.status === 'READY' && elapsedSeconds >= 300 && elapsedSeconds < 600 && <span style={{ marginRight: 2 }}>⚠</span>}
+                        <Clock style={{ width: 10, height: 10, flexShrink: 0 }} />
+                        {elapsedTime}
+                    </span>
                 </div>
             </div>
 
-            {/* Items List */}
-            <div className="px-4 md:px-6 py-2">
-                <div className="space-y-3 md:space-y-4 py-3 md:py-4 border-t border-slate-100">
-                    {order.items.map((item, idx) => (
-                        <div key={idx} className="group/item space-y-1 md:space-y-2">
-                            <div className="flex items-baseline gap-2 md:gap-3">
-                                <span className="text-lg md:text-xl font-serif text-slate-300">{item.qty}</span>
-                                <span className="text-base md:text-lg font-semibold text-slate-800 leading-tight">
+            {/* ── Items ── */}
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 0 }}>
+                {order.items.map((item, idx) => (
+                    <div key={idx}>
+                        {idx > 0 && <div style={{ borderTop: '1px solid #F0EEE9', margin: '8px 0' }} />}
+                        <div style={{ padding: '2px 0' }}>
+                            {/* Qty + Name */}
+                            <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
+                                <span style={{ fontFamily: DM, fontSize: 11, color: '#C4BDB6', minWidth: 22 }}>
+                                    {item.qty}×
+                                </span>
+                                <span style={{ fontFamily: PJS, fontSize: 15, fontWeight: 600, color: '#1A1714', letterSpacing: '-0.01em' }}>
                                     {item.name}
                                 </span>
                             </div>
-                            
+
+                            {/* Modifiers */}
                             {(item.modifiers?.length ?? 0) > 0 && (
-                                <div className="flex flex-wrap gap-1 md:gap-2 pl-5 md:pl-6">
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: 3, paddingLeft: 10, marginTop: 4 }}>
                                     {item.modifiers?.map((mod, mIdx) => (
-                                        <span key={mIdx} className="text-[9px] md:text-[10px] px-2 py-0.5 rounded-full bg-slate-50 text-slate-500 border border-slate-200">
-                                            {mod}
-                                        </span>
+                                        <div key={mIdx} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                                            <div style={{ width: 3, height: 3, background: '#D4CFC8', borderRadius: '50%' }} />
+                                            <span style={{ fontFamily: PJS, fontSize: 12, color: '#A09890', fontWeight: 400 }}>
+                                                {mod}
+                                            </span>
+                                        </div>
                                     ))}
                                 </div>
                             )}
-                            
+
+                            {/* Special notes */}
                             {item.notes && (
-                                <p className="pl-5 md:pl-6 text-xs md:sm text-rusty-orange/80 italic font-medium leading-relaxed">
-                                    “{item.notes}”
-                                </p>
+                                <div style={{ 
+                                    marginTop: 6,
+                                    padding: '4px 10px',
+                                    background: '#FFFBEB',
+                                    borderLeft: '2px solid #D97706',
+                                    borderRadius: '0 4px 4px 0'
+                                }}>
+                                    <p style={{ fontFamily: PJS, fontSize: 12, fontStyle: 'italic', color: '#92400E' }}>
+                                        {item.notes}
+                                    </p>
+                                </div>
                             )}
                         </div>
-                    ))}
-                </div>
+                    </div>
+                ))}
             </div>
 
-            {/* Footer Action */}
-            <div className="p-4 md:p-6 pt-2">
-                {config.next && (
-                    <Button
-                        onClick={handleStatusUpdate}
-                        disabled={isUpdating}
-                        className={`w-full h-12 md:h-14 rounded-xl font-bold uppercase tracking-[0.2em] text-[10px] md:text-xs transition-all duration-300 active:scale-95 shadow-lg shadow-slate-200 ${config.color} ${
-                            isUpdating ? 'opacity-50' : ''
-                        }`}
-                    >
-                        {isUpdating ? (
-                            <div className="flex items-center gap-2 md:gap-3">
-                                <div className="w-3 md:w-4 h-3 md:h-4 border-2 border-current/20 border-t-current rounded-full animate-spin" />
-                                <span>Wait</span>
-                            </div>
-                        ) : (
-                            <div className="flex items-center gap-2">
-                                <ChefHat className="w-3.5 md:w-4 h-3.5 md:h-4" />
-                                <span>{config.label}</span>
-                            </div>
-                        )}
-                    </Button>
-                )}
-            </div>
-            
-            {/* Status Indicator Bar */}
-            <div className={`absolute bottom-0 left-0 right-0 h-1.5 transition-colors duration-500 ${config.indicator}`} />
-        </Card>
+            {/* ── Action button ── */}
+            {nextStatus && (
+                <div style={{ marginTop: 20 }}>
+                    {order.status === 'READY' ? (
+                        <button
+                            onClick={handleStatusUpdate}
+                            disabled={isUpdating}
+                            style={{
+                                width: '100%',
+                                height: 38,
+                                background: '#059669',
+                                color: '#FFFFFF',
+                                border: 'none',
+                                borderRadius: 6,
+                                fontFamily: PJS,
+                                fontSize: 12,
+                                fontWeight: 700,
+                                letterSpacing: '0.08em',
+                                textTransform: 'uppercase',
+                                cursor: isUpdating ? 'not-allowed' : 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: 8,
+                                transition: 'all 150ms ease',
+                                boxShadow: isUpdating ? 'none' : '0 1px 2px rgba(0,0,0,0.1)',
+                            }}
+                            className="group active:scale-[0.98]"
+                            onMouseOver={(e) => {
+                                e.currentTarget.style.background = '#047857';
+                                e.currentTarget.style.transform = 'translateY(-1px)';
+                                e.currentTarget.style.boxShadow = '0 4px 12px rgba(5,150,105,0.25)';
+                            }}
+                            onMouseOut={(e) => {
+                                e.currentTarget.style.background = '#059669';
+                                e.currentTarget.style.transform = 'translateY(0px)';
+                                e.currentTarget.style.boxShadow = '0 1px 2px rgba(0,0,0,0.1)';
+                            }}
+                        >
+                            {isUpdating ? (
+                                <div style={{ width: 14, height: 14, border: '2px solid currentColor', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 0.6s linear infinite' }} />
+                            ) : (
+                                <>
+                                    <span style={{ fontSize: 14 }}>✓</span>
+                                    SERVED
+                                </>
+                            )}
+                        </button>
+                    ) : (
+                        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                            <button
+                                onClick={handleStatusUpdate}
+                                disabled={isUpdating}
+                                style={{
+                                    fontFamily: PJS,
+                                    fontSize: 11,
+                                    fontWeight: order.status === 'PREPARING' ? 600 : 500,
+                                    letterSpacing: '0.1em',
+                                    textTransform: 'uppercase',
+                                    background: order.status === 'PREPARING' ? '#059669' : 'transparent',
+                                    color: order.status === 'PREPARING' ? '#FFFFFF' : '#6B6460',
+                                    border: order.status === 'PREPARING' ? 'none' : '1px solid #D4CFC8',
+                                    borderRadius: 6,
+                                    height: 34,
+                                    minWidth: 90,
+                                    paddingLeft: 16,
+                                    paddingRight: 16,
+                                    cursor: isUpdating ? 'not-allowed' : 'pointer',
+                                    opacity: isUpdating ? 0.4 : 1,
+                                    transition: 'all 150ms ease',
+                                }}
+                                onMouseOver={(e) => {
+                                    if (order.status === 'PREPARING') {
+                                        e.currentTarget.style.background = '#047857';
+                                    } else {
+                                        const color = order.status === 'PENDING' ? '#2563EB' : '#D97706';
+                                        e.currentTarget.style.color = color;
+                                        e.currentTarget.style.borderColor = color;
+                                        e.currentTarget.style.background = `${color}0A`; // 0.04 alpha
+                                    }
+                                }}
+                                onMouseOut={(e) => {
+                                    if (order.status === 'PREPARING') {
+                                        e.currentTarget.style.background = '#059669';
+                                    } else {
+                                        e.currentTarget.style.color = '#6B6460';
+                                        e.currentTarget.style.borderColor = '#D4CFC8';
+                                        e.currentTarget.style.background = 'transparent';
+                                    }
+                                }}
+                            >
+                                {isUpdating ? '...' : {
+                                    PENDING: 'Accept',
+                                    ACCEPTED: 'Start Prep',
+                                    PREPARING: 'Mark Ready'
+                                }[order.status as 'PENDING' | 'ACCEPTED' | 'PREPARING']}
+                            </button>
+                        </div>
+                    )}
+                </div>
+            )}
+        </div>
     )
 }
