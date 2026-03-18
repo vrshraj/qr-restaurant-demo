@@ -6,7 +6,7 @@ import { MENU_CATEGORIES, MENU_ITEMS, RESTAURANT } from '@/lib/data'
 import { useOrders } from '@/context/OrderContext'
 import { useCart } from '@/lib/store'
 import { ModifierModal } from '@/components/ModifierModal'
-import { CartDrawer } from '@/components/CartDrawer'
+import CartDrawer from '@/components/CartDrawer'
 import { Badge } from '@/components/ui/badge'
 import { ShoppingCart, UtensilsCrossed } from 'lucide-react'
 
@@ -192,7 +192,7 @@ export function MenuClient({ tableNumber }: MenuClientProps) {
             />
 
             {/* ── Cart Drawer ── */}
-            <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
+            <CartDrawer />
         </div>
     )
 }

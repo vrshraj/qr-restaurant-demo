@@ -21,7 +21,7 @@ const MOCK_RECOMMENDATIONS = [
   { id: 'rec-3', name: 'Masala Papad', price: 45, image: 'https://images.unsplash.com/photo-1626132644529-56e960c19cd2?q=80&w=200&auto=format&fit=crop' },
 ]
 
-export function CartDrawer() {
+export default function CartDrawer() {
   const {
     cartOpen,
     setCartOpen,
